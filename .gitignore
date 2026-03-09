@@ -1,0 +1,19 @@
+# R
+.Rhistory
+.Rdata
+.RData
+.Rproj.user/
+*.Rproj
+
+# Compiled objects
+*.o
+*.so
+*.dll
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*~
