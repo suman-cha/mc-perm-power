@@ -98,30 +98,32 @@ reproduce_figure1 <- function(Bmax = 400, save_pdf = FALSE) {
   # ── Plot ──────────────────────────────────────────────────
   .fig_dir <- file.path(.this_script_dir, "..", "figures")
   if (!dir.exists(.fig_dir)) dir.create(.fig_dir, recursive = TRUE)
-  if (save_pdf) pdf(file.path(.fig_dir, "figure1.pdf"), width = 10, height = 4.2)
+  if (save_pdf) pdf(file.path(.fig_dir, "figure1.pdf"), width = 10, height = 4)
   
-  par(mfrow = c(1, 2), mar = c(4.5, 4.5, 2.5, 1), family = "serif")
-  
-  # ─── Case 1 ───
+  par(mfrow = c(1, 2), mar = c(5, 5.5, 3, 1.5), family = "serif")
+
+  # ─── Case 1 (n = 15) ───
   plot(Bseq, pow1, type = "l", col = "steelblue", lwd = 1.5,
        xlim = c(1, Bmax), ylim = c(0, 0.55),
        xaxs = "i", yaxs = "i",
        xlab = expression(italic(B)), ylab = "Power",
-       main = expression("Case 1: " * italic(n) == 15),
+       main = expression("Case 1  (" * italic(n) == 15 * ")"),
+       cex.main = 1.8, cex.lab = 1.6, cex.axis = 1.4, font.main = 1,
        panel.first = grid(col = "grey90"))
   abline(h = pe1, lty = 2, col = "orangered", lwd = 1.5)
   points(aligned, pow1[aligned], pch = 16, cex = 0.8, col = "forestgreen")
-  
-  # ─── Case 2 ───
+
+  # ─── Case 2 (n = 25) ───
   plot(Bseq, pow2, type = "l", col = "steelblue", lwd = 1.5,
        xlim = c(1, Bmax), ylim = c(0, 0.55),
        xaxs = "i", yaxs = "i",
        xlab = expression(italic(B)), ylab = "Power",
-       main = expression("Case 2: " * italic(n) == 25),
+       main = expression("Case 2  (" * italic(n) == 25 * ")"),
+       cex.main = 1.8, cex.lab = 1.6, cex.axis = 1.4, font.main = 1,
        panel.first = grid(col = "grey90"))
   abline(h = pe2, lty = 2, col = "orangered", lwd = 1.5)
   points(aligned, pow2[aligned], pch = 16, cex = 0.8, col = "forestgreen")
-  
+
   # ─── Legend (on Case 2 panel) ───
   # legend("topright",
   #        legend = c(expression(Pow(italic(B))),

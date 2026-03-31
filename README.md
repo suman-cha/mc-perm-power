@@ -11,8 +11,9 @@ This repository contains all code needed to reproduce the figures and numerical 
 ```
 mc-perm-power/
 ├── R/
-│   ├── Figure1.R            # Figure 1: closed-form Bernoulli example
-│   └── Appendix.R           # Appendix B: four test statistics (mean diff, MMD², HSIC, energy)
+│   ├── Figure1.R              # Figure 1: closed-form Bernoulli example
+│   ├── Figure_convergence.R   # Convergence of Pow(B) to Pow_exact (extended B range)
+│   └── Appendix.R             # Appendix B: four test statistics (mean diff, MMD, HSIC, energy)
 ├── src/
 │   ├── pow_mc.cpp           # Core Rcpp: power curve computation via Eq. (4)
 │   └── appendixB_core.cpp   # Rcpp: test statistic implementations for Appendix B
@@ -37,7 +38,10 @@ All scripts are self-contained. Run from the repository root:
 # Figure 1 (Section 4: Bernoulli example, Cases 1 & 2)
 source("R/Figure1.R")
 
-# Appendix B (four test statistics: mean diff, MMD², HSIC, energy distance)
+# Convergence to exact power (B up to 10000)
+source("R/Figure_convergence.R")
+
+# Appendix B (four test statistics: mean diff, MMD, HSIC, energy distance)
 source("R/Appendix.R")
 ```
 

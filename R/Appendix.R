@@ -16,7 +16,7 @@
 #   Rscript appendixB.R            # command line
 #
 # Outputs:
-#   figure_appendixB.pdf   (2 x 2 panel, style matches Figure 1)
+#   figure_appendixB.pdf   (2 x 2 panel)
 # ═══════════════════════════════════════════════════════════════
 
 library(Rcpp)
@@ -149,7 +149,7 @@ cat("  done.\n")
 #      n1 = n2 = 20
 # ═══════════════════════════════════════════════════════════════
 cat("Panel (d): Energy distance ...\n")
-n1_d <- 20; n2_d <- 20; sigma_d <- 1.8
+n1_d <- 20; n2_d <- 20; sigma_d <- 2.5
 n_d  <- n1_d + n2_d
 
 obs_energy <- function(D, n1) {
@@ -190,58 +190,32 @@ ref_pow <- function(pow) {
 
 .fig_dir <- file.path(.this_dir, "..", "figures")
 if (!dir.exists(.fig_dir)) dir.create(.fig_dir, recursive = TRUE)
-pdf(file.path(.fig_dir, "figure_appendixB.pdf"), width = 10, height = 8.4)
-par(mfrow = c(2, 2), mar = c(4.5, 4.8, 2.8, 1.2), family = "serif")
+pdf(file.path(.fig_dir, "figure_appendixB.pdf"), width = 9, height = 7)
+par(mfrow = c(2, 2),
+    mar = c(4, 4.5, 2.2, 0.8),   # bottom, left, top, right
+    oma = c(0.5, 0.5, 0, 0),     # outer margin
+    family = "serif")
 
 plot_panel <- function(pow, title_expr) {
-  rp   <- ref_pow(pow)
-  ymin <- max(min(pow) - 0.02, 0)
-  ymax <- max(pow) + 0.03
-  
   plot(Bseq, pow, type = "l", col = "steelblue", lwd = 1.4,
-       xlim = c(1, Bmax), ylim = c(ymin, ymax),
+       xlim = c(1, Bmax), ylim = c(0, 0.55),
        xaxs = "i", yaxs = "i",
        xlab = expression(italic(B)),
        ylab = "Power",
        main = title_expr,
-       cex.main = 1.05, cex.lab = 1.05,
-       panel.first = grid(col = "grey90"))
-  abline(h = rp, lty = 2, col = "orangered", lwd = 1.4)
-  points(aligned, pow[aligned], pch = 16, cex = 0.65, col = "forestgreen")
+       cex.main = 1.6, cex.lab = 1.4, cex.axis = 1.2, font.main = 1,
+       panel.first = {
+         abline(h = seq(0.1, 0.5, by = 0.1), col = "grey88", lty = 1, lwd = 0.4)
+         abline(v = seq(100, 400, by = 100), col = "grey88", lty = 1, lwd = 0.4)
+       })
+  points(aligned, pow[aligned], pch = 20, cex = 0.8, col = "forestgreen")
 }
 
-# ── Panel (a) ─────────────────────────────────────────────────
-plot_panel(pow_a,
-           title_expr = bquote("(a) Mean difference: " *
-                                 italic(n)[1] == italic(n)[2] ~ "=" ~ 20 * ", " ~ delta == 0.55))
-
-# ── Panel (b) ─────────────────────────────────────────────────
-plot_panel(pow_b,
-           title_expr = bquote("(b) " * MMD^2 * ": " *
-                                 italic(n)[1] == italic(n)[2] ~ "=" ~ 25 * ", " ~
-                                 italic(d) == 5 * ", " ~ delta == 0.35))
-
-# ── Panel (c) ─────────────────────────────────────────────────
-plot_panel(pow_c,
-           title_expr = bquote("(c) HSIC: " *
-                                 italic(Y) == italic(X)^2 + epsilon * ", " ~
-                                 italic(n) == 50 * ", " ~ sigma[epsilon] == 2.5))
-
-# ── Panel (d) ─────────────────────────────────────────────────
-plot_panel(pow_d,
-           title_expr = bquote("(d) Energy: " *
-                                 italic(n)[1] == italic(n)[2] ~ "=" ~ 20 * ", " ~
-                                 sigma[alt] == 1.8))
-
-# ── Shared legend (bottom-right of last panel) ───────────────
-# legend("topright",
-#        legend = c(expression(Pow(italic(B))),
-#                   expression(widehat(Pow)[infinity]),
-#                   expression(alpha(italic(B)+1) %in% scriptstyle(N))),
-#        col    = c("steelblue", "orangered", "forestgreen"),
-#        lty    = c(1, 2, NA), pch = c(NA, NA, 16),
-#        lwd    = c(1.4, 1.4, NA), pt.cex = 0.65,
-#        bg = "white", cex = 0.85)
+# ── Panels ────────────────────────────────────────────────────
+plot_panel(pow_a, title_expr = "(a) Mean difference")
+plot_panel(pow_b, title_expr = "(b) MMD")
+plot_panel(pow_c, title_expr = "(c) HSIC")
+plot_panel(pow_d, title_expr = "(d) Energy distance")
 
 dev.off()
 cat("\nSaved: figure_appendixB.pdf\n")
