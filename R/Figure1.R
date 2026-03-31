@@ -98,31 +98,50 @@ reproduce_figure1 <- function(Bmax = 400, save_pdf = FALSE) {
   # ── Plot ──────────────────────────────────────────────────
   .fig_dir <- file.path(.this_script_dir, "..", "figures")
   if (!dir.exists(.fig_dir)) dir.create(.fig_dir, recursive = TRUE)
-  if (save_pdf) pdf(file.path(.fig_dir, "figure1.pdf"), width = 10, height = 4)
+  .fig_name <- if (Bmax == 400) "figure1.pdf" else sprintf("figure1_bmax%d.pdf", Bmax)
+  if (save_pdf) pdf(file.path(.fig_dir, .fig_name), width = 10, height = 4)
   
   par(mfrow = c(1, 2), mar = c(5, 5.5, 3, 1.5), family = "serif")
 
+  # Open circle subset (only for non-default Bmax)
+  .show_scatter <- (Bmax != 400)
+  if (.show_scatter) {
+    # ~5 open circles per sawtooth segment
+    .seg_len <- if (length(aligned) >= 2) aligned[2] - aligned[1] else 20
+    .by <- max(1, round(.seg_len / 5))
+    .near_aligned <- unique(unlist(lapply(aligned, function(a) (a-1):(a+1))))
+    .scatter_idx <- setdiff(seq(1, Bmax, by = .by), .near_aligned)
+  }
+
   # ─── Case 1 (n = 15) ───
   plot(Bseq, pow1, type = "l", col = "steelblue", lwd = 1.5,
-       xlim = c(1, Bmax), ylim = c(0, 0.55),
-       xaxs = "i", yaxs = "i",
+       xlim = c(0, Bmax), ylim = c(0, 0.55),
+       xaxs = "i", yaxs = "i", xaxt = "n", yaxt = "n",
        xlab = expression(italic(B)), ylab = "Power",
        main = expression("Case 1  (" * italic(n) == 15 * ")"),
        cex.main = 1.8, cex.lab = 1.6, cex.axis = 1.4, font.main = 1,
        panel.first = grid(col = "grey90"))
+  axis(1, at = seq(0, Bmax, by = 50), cex.axis = 1.4)
+  axis(2, at = seq(0, 0.5, by = 0.1), labels = sprintf("%.1f", seq(0, 0.5, by = 0.1)), cex.axis = 1.2, las = 1)
   abline(h = pe1, lty = 2, col = "orangered", lwd = 1.5)
-  points(aligned, pow1[aligned], pch = 16, cex = 0.8, col = "forestgreen")
+  if (.show_scatter)
+    points(.scatter_idx, pow1[.scatter_idx], pch = 1, cex = 0.9, col = adjustcolor("forestgreen", alpha.f = 0.6))
+  points(aligned, pow1[aligned], pch = 16, cex = 1.1, col = "forestgreen")
 
   # ─── Case 2 (n = 25) ───
   plot(Bseq, pow2, type = "l", col = "steelblue", lwd = 1.5,
-       xlim = c(1, Bmax), ylim = c(0, 0.55),
-       xaxs = "i", yaxs = "i",
+       xlim = c(0, Bmax), ylim = c(0, 0.55),
+       xaxs = "i", yaxs = "i", xaxt = "n", yaxt = "n",
        xlab = expression(italic(B)), ylab = "Power",
        main = expression("Case 2  (" * italic(n) == 25 * ")"),
        cex.main = 1.8, cex.lab = 1.6, cex.axis = 1.4, font.main = 1,
        panel.first = grid(col = "grey90"))
+  axis(1, at = seq(0, Bmax, by = 50), cex.axis = 1.4)
+  axis(2, at = seq(0, 0.5, by = 0.1), labels = sprintf("%.1f", seq(0, 0.5, by = 0.1)), cex.axis = 1.2, las = 1)
   abline(h = pe2, lty = 2, col = "orangered", lwd = 1.5)
-  points(aligned, pow2[aligned], pch = 16, cex = 0.8, col = "forestgreen")
+  if (.show_scatter)
+    points(.scatter_idx, pow2[.scatter_idx], pch = 1, cex = 0.9, col = adjustcolor("forestgreen", alpha.f = 0.6))
+  points(aligned, pow2[aligned], pch = 16, cex = 1.1, col = "forestgreen")
 
   # ─── Legend (on Case 2 panel) ───
   # legend("topright",
@@ -136,7 +155,7 @@ reproduce_figure1 <- function(Bmax = 400, save_pdf = FALSE) {
   # 
   if (save_pdf) {
     dev.off()
-    cat("Saved to figure1.pdf\n")
+    cat(sprintf("Saved to %s\n", .fig_name))
   }
   
   invisible(list(pow1 = pow1, pow2 = pow2, pe1 = pe1, pe2 = pe2,
@@ -215,7 +234,7 @@ run_experiment <- function(n, p1, alpha = 0.05, Bmax = 400,
        main = main_title,
        panel.first = grid(col = "grey90"))
   abline(h = pe, lty = 2, col = "orangered", lwd = 1.5)
-  points(aligned, pow[aligned], pch = 16, cex = 0.8, col = "forestgreen")
+  points(aligned, pow[aligned], pch = 16, cex = 1.1, col = "forestgreen")
   
   legend("bottomright",
          legend = c(expression(Pow(italic(B))),
@@ -262,7 +281,7 @@ plot_sawtooth_zoom <- function(n, p1, alpha = 0.05,
        main = expression("Critical count " * italic(k)[italic(B)] *
                            " = " * group(lfloor, alpha %.% (italic(B)+1), rfloor) - 1))
   abline(v = aligned, lty = 3, col = "grey70")
-  points(aligned, kB[aligned], pch = 16, cex = 1.0, col = "forestgreen")
+  points(aligned, kB[aligned], pch = 16, cex = 1.1, col = "forestgreen")
 }
 
 
