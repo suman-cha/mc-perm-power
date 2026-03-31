@@ -4,7 +4,7 @@ Reproducibility code for the paper on non-monotonicity of power in Monte Carlo p
 
 ## Overview
 
-This repository contains all code needed to reproduce the figures and numerical results in the paper. The paper shows that the unconditional power of the standard (non-randomized) Monte Carlo permutation test is **not** monotone in the number of permutations $B$, and characterizes the sawtooth behavior driven by the integer-valued threshold $k_B = \lfloor \alpha(B+1) \rfloor - 1$.
+This repository contains all code needed to reproduce the figures and numerical results in the paper. The paper shows that the unconditional power of the standard (non-randomized) Monte Carlo permutation test is **not** monotone in the number of permutations, and characterizes the sawtooth behavior driven by the integer-valued threshold.
 
 ## Repository structure
 
