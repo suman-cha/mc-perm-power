@@ -99,7 +99,7 @@ reproduce_figure1 <- function(Bmax = 400, save_pdf = FALSE) {
   .fig_dir <- file.path(.this_script_dir, "..", "figures")
   if (!dir.exists(.fig_dir)) dir.create(.fig_dir, recursive = TRUE)
   .fig_name <- if (Bmax == 400) "figure1.pdf" else sprintf("figure1_bmax%d.pdf", Bmax)
-  if (save_pdf) pdf(file.path(.fig_dir, .fig_name), width = 10, height = 4)
+  if (save_pdf) pdf(file.path(.fig_dir, .fig_name), width = 6, height = 3)
   
   par(mfrow = c(1, 2), mar = c(5, 5.5, 3, 1.5), family = "serif")
 

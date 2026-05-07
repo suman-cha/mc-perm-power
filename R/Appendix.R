@@ -190,32 +190,62 @@ ref_pow <- function(pow) {
 
 .fig_dir <- file.path(.this_dir, "..", "figures")
 if (!dir.exists(.fig_dir)) dir.create(.fig_dir, recursive = TRUE)
-pdf(file.path(.fig_dir, "figure_appendixB.pdf"), width = 9, height = 7)
-par(mfrow = c(2, 2),
-    mar = c(4, 4.5, 2.2, 0.8),   # bottom, left, top, right
-    oma = c(0.5, 0.5, 0, 0),     # outer margin
-    family = "serif")
 
-plot_panel <- function(pow, title_expr) {
-  plot(Bseq, pow, type = "l", col = "steelblue", lwd = 1.4,
-       xlim = c(1, Bmax), ylim = c(0, 0.55),
-       xaxs = "i", yaxs = "i",
-       xlab = expression(italic(B)),
-       ylab = "Power",
-       main = title_expr,
-       cex.main = 1.6, cex.lab = 1.4, cex.axis = 1.2, font.main = 1,
-       panel.first = {
-         abline(h = seq(0.1, 0.5, by = 0.1), col = "grey88", lty = 1, lwd = 0.4)
-         abline(v = seq(100, 400, by = 100), col = "grey88", lty = 1, lwd = 0.4)
-       })
-  points(aligned, pow[aligned], pch = 20, cex = 0.8, col = "forestgreen")
+draw_appendixB <- function(out_path, pdf_w, pdf_h,
+                           mar_vec, cex_main, cex_lab, cex_axis,
+                           lwd_line, dot_cex) {
+  pdf(out_path, width = pdf_w, height = pdf_h)
+  par(mfrow = c(2, 2),
+      mar = mar_vec,
+      oma = c(0.5, 0.5, 0, 0),
+      family = "serif")
+
+  plot_panel <- function(pow, title_expr) {
+    plot(Bseq, pow, type = "l", col = "steelblue", lwd = lwd_line,
+         xlim = c(1, Bmax), ylim = c(0, 0.55),
+         xaxs = "i", yaxs = "i",
+         xlab = expression(italic(B)),
+         ylab = "Power",
+         main = title_expr,
+         cex.main = cex_main, cex.lab = cex_lab, cex.axis = cex_axis,
+         font.main = 1,
+         panel.first = {
+           abline(h = seq(0.1, 0.5, by = 0.1),
+                  col = "grey88", lty = 1, lwd = 0.4)
+           abline(v = seq(100, 400, by = 100),
+                  col = "grey88", lty = 1, lwd = 0.4)
+         })
+    points(aligned, pow[aligned], pch = 20, cex = dot_cex,
+           col = "forestgreen")
+  }
+
+  plot_panel(pow_a, title_expr = "(a) Mean difference")
+  plot_panel(pow_b, title_expr = "(b) MMD")
+  plot_panel(pow_c, title_expr = "(c) HSIC")
+  plot_panel(pow_d, title_expr = "(d) Energy distance")
+
+  dev.off()
+  cat(sprintf("Saved %s\n", basename(out_path)))
 }
 
-# ── Panels ────────────────────────────────────────────────────
-plot_panel(pow_a, title_expr = "(a) Mean difference")
-plot_panel(pow_b, title_expr = "(b) MMD")
-plot_panel(pow_c, title_expr = "(c) HSIC")
-plot_panel(pow_d, title_expr = "(d) Energy distance")
+# 2-column version (current size)
+draw_appendixB(
+  out_path = file.path(.fig_dir, "figure_appendixB_2col.pdf"),
+  pdf_w = 8, pdf_h = 6,
+  mar_vec = c(4, 4.5, 2.2, 0.8),
+  cex_main = 1.6, cex_lab = 1.4, cex_axis = 1.2,
+  lwd_line = 1.4, dot_cex = 0.8
+)
 
-dev.off()
-cat("\nSaved: figure_appendixB.pdf\n")
+# 1-column version
+# Larger PDF dimensions intentional. LaTeX scales the PDF down to
+# \columnwidth (~3.15 in), so a larger source PDF means a smaller
+# scaling factor and proportionally smaller text/marks in print.
+# Keeping the same cex as 2-col preserves panel-relative proportions.
+draw_appendixB(
+  out_path = file.path(.fig_dir, "figure_appendixB_1col.pdf"),
+  pdf_w = 9, pdf_h = 6,
+  mar_vec = c(4, 4.5, 2.2, 0.8),
+  cex_main = 1.6, cex_lab = 1.4, cex_axis = 1.2,
+  lwd_line = 1.4, dot_cex = 0.8
+)
